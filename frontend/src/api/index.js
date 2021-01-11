@@ -1,4 +1,4 @@
-var socket = new WebSocket("ws://localhost:8080/ws")
+var socket = new WebSocket("ws://192.168.31.103:8080/ws")
 
 let connect = cb => {
     console.log("Attempting Connection...");
@@ -21,9 +21,12 @@ let connect = cb => {
     };
 };
 
-let sendMsg = msg => {
+let sendMsg = (sender, msg) => {
     console.log("sending msg: ", msg)
-    socket.send(msg)
+    socket.send(JSON.stringify({
+        sender: sender,
+        body: msg
+    }));
 };
 
 export { connect, sendMsg };
