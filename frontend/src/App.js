@@ -1,15 +1,19 @@
 import React, { Component } from "react";
-import "./App.css";
 import { connect, sendMsg } from "./api";
 import Header from "./components/Header/Header";
 import ChatHistory from "./components/ChatHistory/ChatHistory";
 import ChatInput from "./components/ChatInput/ChatInput";
+import Auth from "./components/Auth/Auth";
+
+import "./App.css";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      chatHistory: []
+      chatHistory: [],
+      auth: false,
+      userName: ""
     }
   }
 
@@ -23,21 +27,37 @@ class App extends Component {
     });
   }
 
-  send(event) {
+  handleAuth = userName => {
+    sendMsg(userName);
+    this.setState({ userName: userName, auth: true })
+  }
+
+  sendMessage(event) {
     if(event.keyCode === 13) {
-      sendMsg(event.target.value);
+      let sender = this.state.userName
+      sendMsg(sender, event.target.value);
       event.target.value = "";
     }
   }
 
   render() {
-    return (
-      <div className="App">
-        <Header />
-        <ChatHistory chatHistory={this.state.chatHistory} />
-        <ChatInput send={this.send} />
-      </div>
-    );
+    if (this.state.auth) {
+      return (
+        <div className="App">
+          <Header />
+          <ChatHistory chatHistory={this.state.chatHistory} />
+          <ChatInput userName={this.state.userName} />
+        </div>
+      );
+    } else {
+      return (
+        <div className="Auth">
+          <Header />
+          <Auth send={this.handleAuth} />
+        </div>
+        );
+    }
+
   }
 }
 
