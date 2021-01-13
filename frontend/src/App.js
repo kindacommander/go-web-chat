@@ -8,18 +8,18 @@ import Auth from "./components/Auth/Auth";
 import "./App.css";
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
       chatHistory: [],
       auth: false,
-      userName: ""
+      userName: "",
     }
   }
 
   componentDidMount() {
     connect((msg) => {
-      console.log("New Message")
       this.setState(prevState => ({
         chatHistory: [...this.state.chatHistory, msg]
       }))
@@ -28,12 +28,18 @@ class App extends Component {
   }
 
   handleAuth = userName => {
-    sendMsg(userName);
+    connect(msg => {
+      this.setState(prevState => ({
+        chatHistory: [...this.state.chatHistory, msg]
+      }))
+      console.log(this.state);
+    });
+    sendMsg("System", "New user: " + userName);
     this.setState({ userName: userName, auth: true })
   }
 
   sendMessage(event) {
-    if(event.keyCode === 13) {
+    if (event.keyCode === 13) {
       let sender = this.state.userName
       sendMsg(sender, event.target.value);
       event.target.value = "";
@@ -55,7 +61,7 @@ class App extends Component {
           <Header />
           <Auth send={this.handleAuth} />
         </div>
-        );
+      );
     }
 
   }

@@ -5,10 +5,10 @@ import "./ChatInput.scss";
 class ChatInput extends Component {
 
     handleSend = event => {
-        if(event.keyCode === 13) {
+        if (event.keyCode === 13) {
             sendMsg(this.props.userName, event.target.value);
             event.target.value = "";
-          }
+        }
     }
 
     render() {
