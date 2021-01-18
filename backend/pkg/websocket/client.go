@@ -10,7 +10,7 @@ import (
 
 type Client struct {
 	ID       string
-	UserName string
+	Username string
 	Conn     *websocket.Conn
 	Pool     *Pool
 }

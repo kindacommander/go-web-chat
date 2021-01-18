@@ -4,12 +4,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/kindacommander/go-web-chat/pkg/websocket"
 )
 
 // WS endpoint
 func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
+	username, ok := r.URL.Query()["username"]
+	if !ok || len(username[0]) < 1 {
+		log.Println("Url Param 'username is missing")
+		return
+	}
+
 	fmt.Println("Websocket Endpoint Hit")
 	conn, err := websocket.Upgrade(w, r)
 	if err != nil {
@@ -17,8 +24,9 @@ func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 	}
 
 	client := &websocket.Client{
-		Conn: conn,
-		Pool: pool,
+		Username: strings.Join(username, ""),
+		Conn:     conn,
+		Pool:     pool,
 	}
 
 	pool.Register <- client
